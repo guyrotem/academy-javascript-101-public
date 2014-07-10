@@ -1,6 +1,6 @@
 "use strict";
 
-describe('prototype:', function () {
+describe('prototype', function () {
   describe('guidelines:', function(){
       it('define 3 new global types: Animal, Mammal and Dog', function() {
         expect(typeof Animal).toBe('function');
@@ -10,14 +10,12 @@ describe('prototype:', function () {
 
     it('Mammal should extend Animal', function () {
       var mammal = new Mammal();
-
       expect(mammal instanceof Mammal).toBeTruthy();
       expect(mammal instanceof Animal).toBeTruthy();
     });
 
     it('Dog should extend Mammal', function () {
       var dog = new Dog();
-
       expect(dog instanceof Dog).toBeTruthy();
       expect(dog instanceof Mammal).toBeTruthy();
     });
