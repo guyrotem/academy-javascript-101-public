@@ -18,3 +18,16 @@ EventEmitter.prototype.emit = function (event, data) {
     listener.call(self, data);
   });
 };
+
+EventEmitter.prototype.once = function (event, callback) {
+  var self = this,
+      wrapper = function (data) {
+        self.removeListener(event, wrapper);
+        callback.call(self, data);
+      };
+  self.addListener(event, wrapper);
+};
+
+EventEmitter.prototype.removeListener = function(event, callback) {
+  this._events[event] = _.without(this._events[event], callback)
+};
