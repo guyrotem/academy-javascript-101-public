@@ -27,6 +27,7 @@ The order of the exercises is:
 1. Create a javascript snippet that calculates how money much a youtube channel made
 2. Create your version of bind (without using the native "bind")
 3. Create your version of call/apply without using the native functions
-4. Implement [fft](http://en.wikipedia.org/wiki/Fast_Fourier_transform) in a non-blocking way and use it to blur images loaded to a [html canvas](http://www.w3schools.com/html/html5_canvas.asp)
+4. Implement [fft](http://en.wikipedia.org/wiki/Fast_Fourier_transform) in a non-blocking way and use it to display spectral analysis of an image loaded to a [html canvas](http://www.w3schools.com/html/html5_canvas.asp). make sure that the UI does not freeze during the processing (display a progress bar).
+
 
 
