@@ -1,6 +1,9 @@
 "use strict";
 function createMultiplier(multiplyBy) {
-  return function (x) {
+  function multiply(x) {
     return multiplyBy * x;
   }
+  multiply.multiplyBy = multiplyBy;
+
+  return multiply;
 }
