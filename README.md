@@ -1,6 +1,3 @@
-academy-javascript-101
-======================
-
 #Introduction to javascript - Exercise 
 ##Getting started
 Open your bash and type the following commands
