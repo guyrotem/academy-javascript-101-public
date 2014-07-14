@@ -39,7 +39,7 @@ describe('callbacks and events', function () {
         expect(listenerScope).toBe(emitter);
       });
 
-      it('should support multiple events', function(){
+      it('should support multiple events', function () {
         emitter.addListener('firstEvent', myListener);
         emitter.addListener('secondEvent', myListener);
         emitter.addListener('thirdEvent', myListener);
@@ -48,7 +48,7 @@ describe('callbacks and events', function () {
         emitter.emit('secondEvent', 'secondEvent');
         emitter.emit('thirdEvent', 'thirdEvent');
 
-        expect(myListener.wasCalledWithData).toEqual(['firstEvent', 'secondEvent','thirdEvent']);
+        expect(myListener.wasCalledWithData).toEqual(['firstEvent', 'secondEvent', 'thirdEvent']);
       });
 
       it('should call the listener as many times as the event was emitted', function () {
@@ -111,7 +111,7 @@ describe('callbacks and events', function () {
         expect(myListener.wasCalledWithData.length).toBe(2);
       });
 
-      it('should support multiple events', function(){
+      it('should support multiple events', function () {
         emitter.once('firstEvent', myListener);
         emitter.once('secondEvent', myListener);
         emitter.once('thirdEvent', myListener);
@@ -120,7 +120,7 @@ describe('callbacks and events', function () {
         emitter.emit('secondEvent', 'secondEvent');
         emitter.emit('thirdEvent', 'thirdEvent');
 
-        expect(myListener.wasCalledWithData).toEqual(['firstEvent', 'secondEvent','thirdEvent']);
+        expect(myListener.wasCalledWithData).toEqual(['firstEvent', 'secondEvent', 'thirdEvent']);
       });
     });
 
@@ -150,7 +150,7 @@ describe('callbacks and events', function () {
     var piCalc;
     beforeEach(function () {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
-      piCalc = new PiCalc();
+      piCalc = new CalcPi();
     });
 
     describe('general instructions:', function () {
@@ -158,10 +158,12 @@ describe('callbacks and events', function () {
         describe('piCalc.isRandomPointInUnitCircle() - statistically it should converge to pi/4', function () {
           it('should return true if a random 2d point at [0..1],[0..1] is within the unit circle.', function () {
             var inCircle = 0, i;
-            for (i = 0; i < 1000; i++) {
-              inCircle++;
+            for (i = 0; i < 10000; i++) {
+              if (CalcPi.isRandomPointInUnitCircle()) {
+                inCircle++;
+              }
             }
-            expect(Math.round(4 * inCircle / 100)).toBe(31);
+            expect(Math.round(4 * inCircle / 1000)).toBe(31);
           });
         });
       });
