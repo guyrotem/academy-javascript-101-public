@@ -76,10 +76,10 @@ describe('functional programming', function () {
     });
 
     it('should modify the filtered array if a modifier was provided', function () {
-      expect(transformArray([-1, 0, 1], [isPositive]), createMultiplier(10)).toEqual([10]);
-      expect(transformArray([-1, 0, 1, 2], [isPositive]), function square(item) {
+      expect(transformArray([-1, 0, 1], [isPositive], createMultiplier(10))).toEqual([10]);
+      expect(transformArray([-1, 0, 1, 2], [isPositive], function square(item) {
         return item * item;
-      }).toEqual([1, 4]);
+      })).toEqual([1, 4]);
     });
   });
 });
