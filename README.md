@@ -1,6 +1,6 @@
 #Introduction to javascript - Exercise 
 ##Getting started
-Open your bash and type the following commands
+Open your bash and type the following commands:
 
 1. git clone https://github.com/wix/academy-javascript-101.git
 2. bower install
