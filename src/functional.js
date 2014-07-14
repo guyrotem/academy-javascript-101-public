@@ -7,3 +7,9 @@ function createMultiplier(multiplyBy) {
 
   return multiply;
 }
+
+function createAllOfFilter(conditionsArray){
+  return function trivialTrueFilter(){
+    return true;
+  }
+}
