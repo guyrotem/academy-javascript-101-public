@@ -29,5 +29,6 @@ function createAllOfFilter(conditionsArray) {
 }
 
 function transformArray(array, conditionsArray, modifier) {
-  return array.filter(createAllOfFilter(conditionsArray));
+  array = array.filter(createAllOfFilter(conditionsArray));
+  return modifier ? array.map(modifier) : array;
 }
