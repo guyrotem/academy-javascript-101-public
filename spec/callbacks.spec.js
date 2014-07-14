@@ -6,9 +6,9 @@ describe('callbacks and events', function () {
     beforeEach(function () {
       emitter = new EventEmitter();
       myListener = function (data) {
-        myListener.wasCalledWithData = myListener.wasCalledWithData || [];
         myListener.wasCalledWithData.push(data);
       };
+      myListener.wasCalledWithData = [];
     });
 
     describe('addListener and emit', function () {
