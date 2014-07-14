@@ -28,6 +28,15 @@ EventEmitter.prototype.once = function (event, callback) {
   self.addListener(event, wrapper);
 };
 
-EventEmitter.prototype.removeListener = function(event, callback) {
+EventEmitter.prototype.removeListener = function (event, callback) {
   this._events[event] = _.without(this._events[event], callback)
+};
+
+function CalcPi() {
+}
+
+CalcPi.isRandomPointInUnitCircle = function () {
+  var x = Math.random(),
+      y = Math.random();
+  return x*x + y*y <= 1;
 };
