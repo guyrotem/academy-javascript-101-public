@@ -22,7 +22,6 @@ describe('prototype', function () {
   });
 
   describe('Animal', function () {
-
     it('should default to string: Default is an animal with 100 legs that says "Kukukuchoo"', function () {
       var animal = new Animal();
 
