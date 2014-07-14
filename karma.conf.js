@@ -17,7 +17,9 @@ module.exports = function (config) {
     files: [
       'bower_components/lodash/dist/lodash.min.js',
       'src/*.js',
-      'spec/*.js'
+      'spec/prototype.spec.js',
+      'spec/functional.spec.js',
+      'spec/callbacks.spec.js'
     ],
 
 
