@@ -22,7 +22,8 @@ The order of the exercises is:
 2. functional programing
 3. callbacks and events
 
-Further chalanges:
+##Further chalanges:
+
 1. Create a javascript snippet that calculates how money much a youtube channel made
 2. Create your version of bind (without using the native "bind")
 3. Create your version of call/apply without using the native functions
