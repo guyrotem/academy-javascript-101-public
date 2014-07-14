@@ -1,3 +1,6 @@
-/**
- * Created by Omry_Nachman on 7/7/14.
- */
+"use strict";
+function createMultiplier(multiplyBy) {
+  return function (x) {
+    return multiplyBy * x;
+  }
+}
