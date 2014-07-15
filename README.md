@@ -1,4 +1,12 @@
 #Introduction to javascript - Exercise 
+
+##Before you start
+Make sure you have the following installed:
+1. git
+2. node
+3. bower
+4. brew
+
 ##Getting started
 Open your bash and type the following commands:
 
