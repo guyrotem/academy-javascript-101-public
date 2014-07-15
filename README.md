@@ -29,7 +29,8 @@ The order of the exercises is:
 3. Create your version of call/apply without using the native functions
 4. Web server, part 1: create a basic http server that displays the content of a folder at a tree. Include subfolders, file statistics, etc. Implemet it as a stream (i.e. don't make the client wait till your sweep is over).
 5. Web server, part 2: Optimize part 1 to cache past sweeps in memory. use watches to invalidate the cache. Do so in a lean way (try to avoid full sweeps as much as possible)
-6. Web client: Implement [fft](http://en.wikipedia.org/wiki/Fast_Fourier_transform) in a non-blocking way and use it to display spectral analysis of an image loaded to a [html canvas](http://www.w3schools.com/html/html5_canvas.asp). make sure that the UI does not freeze during the processing (display a progress bar).
+6. Web client part 1: Implement [fft](http://en.wikipedia.org/wiki/Fast_Fourier_transform) in a non-blocking way and use it to display spectral analysis of an image loaded to a [html canvas](http://www.w3schools.com/html/html5_canvas.asp). make sure that the UI does not freeze during the processing (display a progress bar).
+7. Web client part 2: Add other image processing stats such as histograms, edge finding etc. Make sure all your processing is non-bloacking
 
 
 
