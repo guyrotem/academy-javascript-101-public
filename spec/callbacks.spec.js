@@ -146,67 +146,81 @@ describe('callbacks and events', function () {
     });
   });
 
-  describe('PiCalc', function () {
-    var piCalc;
+  describe('ApproxyPi', function () {
+    var approxyPi;
     beforeEach(function () {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
-      piCalc = new CalcPi();
+      approxyPi = new ApproxyPi();
     });
 
     describe('general instructions:', function () {
-      describe('PiCalc approximates pi using statistical calculation. Use PiCalc.isRandomPointInUnitCircle to approximate pi with any wanted accuracy', function () {
-        describe('piCalc.isRandomPointInUnitCircle() - statistically it should converge to pi/4', function () {
-          it('should return true if a random 2d point at [0..1],[0..1] is within the unit circle.', function () {
-            var inCircle = 0, i;
-            for (i = 0; i < 10000; i++) {
-              if (CalcPi.isRandomPointInUnitCircle()) {
-                inCircle++;
-              }
-            }
-            expect(Math.round(4 * inCircle / 1000)).toBe(31);
+      describe('ApproxyPi approximates pi using the following series: pi = sum(i=0..inf){4*(-1)^i/(2*i+1)}', function () {
+        describe('ApproxyPi.getSeriesItem', function () {
+          it('should return the nth item of the series', function () {
+            expect(ApproxyPi.getSeriesItem(0)).toBe(4);
+            expect(ApproxyPi.getSeriesItem(1)).toBe(-4 / 3);
+            expect(ApproxyPi.getSeriesItem(2)).toBe(4 / 5);
+            expect(ApproxyPi.getSeriesItem(3)).toBe(-4 / 7);
           });
         });
       });
     });
 
-    it('should include "pi" initiated at 3.1', function () {
-      expect(piCalc.pi).toBe(3.1);
+    it('should include "pi" initiated at 0', function () {
+      expect(approxyPi.pi).toBe(0);
     });
 
-    it('should include "precision" initiated at 1', function () {
-      expect(piCalc.precision).toBe(1);
+    it('should include "precision" initiated at 0', function () {
+      expect(approxyPi.precision).toBe(0);
     });
 
     it('should be an event emitter', function () {
-      expect(piCalc instanceof EventEmitter).toBeTruthy();
+      expect(approxyPi instanceof EventEmitter).toBeTruthy();
     });
 
     describe('the #calc(precision) method', function () {
+      var _done;
+
+      function done() {
+        _done = true;
+      }
+
+      function isDone() {
+        return _done;
+      }
+
+      beforeEach(function () {
+        _done = false;
+      });
+
       describe('after the calc method was called', function () {
         it('should emit a "start" event immediately', function () {
           var wasCalled = false;
-          piCalc.once('start', function () {
+          approxyPi.once('start', function () {
             wasCalled = true;
           });
 
-          piCalc.calc(1);
+          approxyPi.calc(1);
 
           expect(wasCalled).toBeTruthy();
         });
 
         describe('the "done" event', function () {
-          it('should be emitted when the approximation is accurate to the nth digit as defined by the calc call', function (done) {
-            piCalc.once('done', function () {
-              expect(Math.abs(Math.pi - piCalc.pi)).toBeLessThan(Math.pow(10, -piCalc.precision));
-              expect(piCalc.precision).toBe(3);
+          it('should be emitted when the approximation is accurate to the nth digit as defined by the calc call', function () {
+
+            approxyPi.once('done', function () {
+              expect(Math.abs(Math.PI - approxyPi.pi)).toBeLessThan(Math.pow(10, -approxyPi.precision));
+              expect(approxyPi.precision).toBe(3);
+              done();
             });
 
-            piCalc.calc(3);
+            approxyPi.calc(3);
+            waitsFor(isDone, '"done" event to be emitted', 5000);
           });
         });
 
         describe('the "progress" event', function () {
-          it('should be emitted often when pi approximation improves', function (done) {
+          it('should be emitted often when pi approximation improves', function () {
             function itemToBeSmallerThanPrevious(item, index, array) {
               if (index === 0) {
                 return true;
@@ -216,21 +230,23 @@ describe('callbacks and events', function () {
 
             var approximationDelta = [];
 
-            piCalc.addListener('progress', function () {
-              approximationDelta.push(Math.abs(Math.PI - piCalc.pi));
+            approxyPi.addListener('progress', function () {
+              approximationDelta.push(Math.abs(Math.PI - approxyPi.pi));
             });
 
-            piCalc.once('done', function () {
+            approxyPi.once('done', function () {
               expect(approximationDelta.length).toBeGreaterThan(5);
               expect(approximationDelta.every(itemToBeSmallerThanPrevious)).toBeTruthy();
               done();
             });
 
-            piCalc.calc(4);
+            approxyPi.calc(5);
+
+            waitsFor(isDone, '"done" event to be emitted', 2000);
           });
         });
 
-        it('should be non-blocking', function (done) {
+        it('should be non-blocking', function () {
           var ticker = 0;
           var intervalId;
           var startTime = Date.now();
@@ -238,59 +254,62 @@ describe('callbacks and events', function () {
             ticker++;
           }, 10);
 
-          piCalc.once('done', function () {
+          approxyPi.once('done', function () {
             var duration = Date.now() - startTime;
             clearInterval(intervalId);
             expect(ticker).toBeGreaterThan(duration / 100);
             done();
           });
 
-          piCalc.calc(5);
+          approxyPi.calc(5);
+          waitsFor(isDone, '"done" event to be emitted', 2000);
         });
       });
 
 
       describe('when #calc is called for the second (or more) time', function () {
-        beforeEach(function (done) {
-          piCalc.once('done', done);
-          piCalc.calc(3);
+        beforeEach(function () {
+          approxyPi.once('done', done);
+          approxyPi.calc(3);
+          waitsFor(isDone, '"done" event to be emitted', 2000);
         });
 
         it('should not recalculate for lower or equal precision values', function () {
           var doneCount = 0;
-          pi.addListener('done', function () {
+          approxyPi.addListener('done', function () {
             doneCount++;
           });
 
-          piCalc.calc(1);
-          piCalc.calc(2);
-          piCalc.calc(3);
+          approxyPi.calc(1);
+          approxyPi.calc(2);
+          approxyPi.calc(3);
 
           expect(doneCount).toBe(3);
         });
 
-        it('should take less time to calculate higher precision values', function (done) {
-          var virginPiCalc = new PiCalc();
-          virginPiCalc.$startTime = Date.now();
+        it('should take less time to calculate higher precision values', function () {
+          var virginApproxyPi = new ApproxyPi();
+          virginApproxyPi.$startTime = Date.now();
 
-          virginPiCalc.once('done', function () {
-            virginPiCalc.$endTime = Date.now();
-            virginPiCalc.$duration = virginPiCalc.$endTime - virginPiCalc.$startTime;
+          virginApproxyPi.once('done', function () {
+            virginApproxyPi.$endTime = Date.now();
+            virginApproxyPi.$duration = virginApproxyPi.$endTime - virginApproxyPi.$startTime;
             // once we're done calculating from scratch, we start the timer and calculation from 3 to 4 digits
-            piCalc.$startTime = Date.now();
-            piCalc.calc(4);
+            approxyPi.$startTime = Date.now();
+            approxyPi.calc(4);
           });
 
-          piCalc.once('done', function () {
-            piCalc.$endTime = Date.now();
-            piCalc.$duration = piCalc.$endTime - piCalc.$startTime;
+          approxyPi.once('done', function () {
+            approxyPi.$endTime = Date.now();
+            approxyPi.$duration = approxyPi.$endTime - approxyPi.$startTime;
 
             // 20% is just a random value, it should be much more!
-            expect(virginPiCalc.$duration).toBeGreaterThan(piCalc.$duration * 1.2);
+            expect(virginApproxyPi.$duration).toBeGreaterThan(approxyPi.$duration * 1.2);
             done();
           });
 
-          virginPiCalc.calc(4);
+          virginApproxyPi.calc(4);
+          waitsFor(isDone, '"done" event to be emitted by approxyPi', 2000);
         });
       });
     });
