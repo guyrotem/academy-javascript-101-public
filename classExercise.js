@@ -48,7 +48,7 @@ function printTreeHtml(root, path)
         console.log("DFDS");
         return;
     }
-    var innerHTML = "<table><tr><td>"+ root.value + "</td></tr>" + "<tr><td><table></table></td><td id='"+path+"L'></td><td id='"+path+"R'></td></tr></table>";
+    var innerHTML = "<table><tr><td>"+ root.value + "</td></tr>" + "<tr><td><table><tr><td id='"+path+"L'></td><td id='"+path+"R'></td></tr></table></td><td id='"+path+"L'></td><td id='"+path+"R'></td></tr></table>";
     board.innerHTML = innerHTML;
     console.log(innerHTML);
     printTreeHtml(root.left, path+"L");

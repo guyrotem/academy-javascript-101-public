@@ -1,5 +1,5 @@
 //'use strict';
-var _ = require('node_modules/karma/node_modules/lodash/dist/lodash.js');
+//var _ = require('node_modules/karma/node_modules/lodash/dist/lodash.js');
 //  CTOR
 function createMultiplier(multiplyBy)
 {
