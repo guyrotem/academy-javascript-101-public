@@ -45,10 +45,10 @@ function printTreeHtml(root, path)
     var board = document.getElementById(path);
     if(!board)
     {
-        console.log("DFDS");
+        console.log("Can't find cell: "+path);
         return;
     }
-    var innerHTML = "<table><tr><td>"+ root.value + "</td></tr>" + "<tr><td><table><tr><td id='"+path+"L'></td><td id='"+path+"R'></td></tr></table></td><td id='"+path+"L'></td><td id='"+path+"R'></td></tr></table>";
+    var innerHTML = "<table border='1'><tr><td>"+ root.value + "</td></tr>" + "<tr><td><table><tr><td id='"+path+"L' width='50%'></td><td id='"+path+"R' width='50%'></td></tr></table></td></tr></table>";
     board.innerHTML = innerHTML;
     console.log(innerHTML);
     printTreeHtml(root.left, path+"L");
@@ -56,6 +56,17 @@ function printTreeHtml(root, path)
     //document.getElementById('level1').innerHTML = "<table><tr><td>test</td></tr></table>";
 }
 
+function printOriginalArray(numArray) {
+    if(!numArray)
+    {
+        return;
+    }
+    var writeOutput = document.getElementById('randomValues');
+    var writeText= '';
+    _.forEach(numArray, function(num) { writeText += num + ' ';} );
+    writeOutput.innerHTML = writeText;
+
+}
 
 function insertToTree(root, value, isLeftSide)
 {
@@ -95,10 +106,11 @@ function insertToTree(root, value, isLeftSide)
 
 function treeMain()
 {
-    var numArray = generateUniqNumArray(10, 1<<10);
+    var numArray = generateUniqNumArray(50, 1<<15);
     var treeRoot = new TreeNode(null, null, null, null);
     _.forEach(numArray, function(item) { insertToTree(treeRoot, item, function(origValue, newValue) { return newValue < origValue; } )} );
     //printTree(treeRoot, 0, function(str){console.log(str)});
+    printOriginalArray(numArray);
     printTreeHtml(treeRoot, 'output');
     return treeRoot;
 }

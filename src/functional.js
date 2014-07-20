@@ -3,21 +3,25 @@
 //  CTOR
 function createMultiplier(multiplyBy)
 {
-    return function(number) {return multiplyBy * number;}
+    var multFunc = function(number) {return multiplyBy * number;};
+    multFunc.multiplyBy = multiplyBy;
+    return multFunc;
 }
 
 //createMultiplier.prototype.multiplyBy;
 
 function createAllOfFilter(conditionsArray)
 {
+
+
     return function(arg) {
 
         if (conditionsArray != null) {
-
+            //  IMPORTANT!! initial accumulator value is set to first element if not provided explicitly!!
+            //
             return _.reduce(conditionsArray,  function(status, item) {
-                //var item = conditionsArray[key];
                 var iterationStatus = true;
-                if (typeof(item) != 'function') {
+                if (!_.isFunction(item)) {
                     //  ignore non-functions.
                     iterationStatus = true;
                 }
@@ -27,7 +31,7 @@ function createAllOfFilter(conditionsArray)
                 }
                 //  function evaluated to true. pass accumulated status
                 return status && iterationStatus;
-            });
+            }, true);
         }
         else
         {
@@ -40,5 +44,11 @@ function createAllOfFilter(conditionsArray)
 
 function transformArray(array, conditionsArray, modifier)
 {
-    //_.filter
+    //  TODO: don't override arguments
+    var transformedArray = array.slice(0);
+    _.forEach(conditionsArray, function(cond){ transformedArray = _.filter(array, cond); });
+    if(modifier) {
+        transformedArray = _.map(transformedArray, modifier);
+    }
+    return transformedArray;
 }

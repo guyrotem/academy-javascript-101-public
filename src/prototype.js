@@ -12,7 +12,10 @@ function Animal(name)
     this.sound = 'Kukukuchoo';
 }
 
-Animal.prototype.toString = function() { return this.getName() + ' is ' + this.creatureType + ' with ' + this.legsCount + ' legs that says "' + this.sound + '"'}
+Animal.prototype.toString = function () { return this.getName() + ' is ' + this.creatureType + ' with ' + this.legsCount + ' legs that says "' + this.sound + '"'}
+Animal.prototype.name = 'Default';
+Animal.prototype.getName = function () { return this.name; };
+Animal.prototype.speak = function () { return this.sound;  };
 
 function Mammal(name)
 {
@@ -25,6 +28,10 @@ function Mammal(name)
     this.legsCount = 4;
 }
 
+Mammal.prototype = new Animal();
+//Mammal.legsCount = 4;
+//Mammal.creatureType = 'a mammal';
+
 function Dog(name)
 {
     if(name)
@@ -35,11 +42,6 @@ function Dog(name)
     this.sound = 'Woof';
 }
 
-Animal.prototype.name = 'Default';
-Animal.prototype.getName = function() { return this.name; }
 
-Mammal.prototype = new Animal();
-Mammal.legsCount = 4;
-Mammal.creatureType = 'a mammal';
 Dog.prototype = new Mammal();
-Animal.prototype.speak = function() { return this.sound;  }
+

@@ -7,7 +7,8 @@
   <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.0/jasmine_favicon.png">
   <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.0/jasmine.css">
     <style type="text/css">
-        td {text-align:center;}
+        td {text-align: center;}
+        h1 {text-align: center;}
 
     </style>
     <script type="text/javascript" src="node_modules/karma/node_modules/lodash/dist/lodash.js"></script>
@@ -16,9 +17,10 @@
 
 </head>
 
-<body>
+<body onload="treeMain()">
 
-<h1>Hello!</h1>
+<h1>Binary tree!</h1>
+<h2><span>Original values: </span><span id="randomValues"></span></h2>
 <div id="output"></div>
 
 </body>
