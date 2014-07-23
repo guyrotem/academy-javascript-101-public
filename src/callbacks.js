@@ -2,37 +2,45 @@
 
 function EventEmitter()
 {
-    this.listeners = [];
-    this.onceListeners = [];
+    this.listenersAdded = [];
+    this.listenersOnce = [];
 
     this.addListener = function(event, listener) {
-        this.listeners.push ([event, listener]);
+        //  TODO : refactor to "push and create"
+        if(this.listenersAdded[event] == undefined)
+        {
+            this.listenersAdded[event] = [];
+        }
+        this.listenersAdded[event].push(listener);
     };
 
     this.removeListener = function(event, listener) {
-        this.listeners.splice(this.listeners.indexOf(listener), 1);
+        this.listenersAdded[event].splice(this.listenersAdded[event].indexOf(listener), 1);
     };
 
     this.once = function(event, listener)
     {
-        this.onceListeners.push ([event, listener]);
+        if(this.listenersOnce[event] == undefined)
+        {
+            this.listenersOnce[event] = [];
+        }
+        this.listenersOnce[event].push ( listener );
+        //  {event: event, listener: listener}
     };
 
     this.emit = function(event, dataArgument) {
-        //  Debug
-        //_.forEach(this.onceListeners, function(eventStored) {console.log(eventStored[0]+';'+eventStored[1]);});
 
-        var onceEventsRelated = _.filter(this.onceListeners, function(eventType) { return event == eventType[0]; });
-        _.forEach(onceEventsRelated, function(eventType) { eventType[1](dataArgument); });
-        var eventsRelated = _.filter(this.listeners, function(eventType) { return event == eventType[0]; });
-        _.forEach(eventsRelated, function(eventType) {eventType[1]( dataArgument )});
-        //console.log(this.onceListeners.length);
+        var onceEventsRelated = this.listenersOnce[event];
+        this.listenersOnce[event] = [];
+        var self = this;
+        _.forEach(onceEventsRelated, function( listener ) {
+            listener.call(self, dataArgument);
+        });
+        var addedEventsRelated = this.listenersAdded[event];
+        _.forEach(addedEventsRelated, function( listener ) {
+            listener.call(self, dataArgument );
 
-        this.onceListeners = _.filter(this.onceListeners, function (eventListener) {
-            return eventListener[0] != event;
-        } );
-        //console.log(this.onceListeners.length);
-        //console.log(onceEventsRelated.length + ' ' + eventsRelated.length);
+        });
 
     };
 }
@@ -40,59 +48,48 @@ function EventEmitter()
 function ApproxyPi() {
     this.pi = 0;
     this.precision = 0;
-    this.isInProcess = false;
-    this.startSeriesAt = 0;
+    //this.isInProcess = false;
+    this.iterationsDone = 0;
+    this.iterationsLeft = 0;
+
+    this.runLoop = function() {
+        for(var k = this.iterationsDone; k < this.iterationsLeft; k++) {
+            this.pi += ApproxyPi.getSeriesItem(k);
+            this.iterationsDone++;
+            this.emit('progress');
+
+            if (k%10 == 0) {
+
+                window.setTimeout(this.runLoop.apply(this, null), 0);
+                return;
+            }
+        }
+        //console.log("DONE "+this.iterationsDone+ " prec: "+ this.precision);
+        this.emit('done');
+    };
 
     this.calc = function(precision) {
 
+        console.log("starting "+precision);
+
         this.emit('start');
 
-        if(precision >= this.precision) {
-
-            if(!this.isInProcess) {
-                this.pi = 0;
-                this.startSeriesAt = 0;
-                this.isInProcess = true;
-            }
-
-            var requiredNumberOfItems = Math.ceil((Math.pow(10, precision+1) - 1) / 2);
-
-            var useFunctional = false;
-            if(useFunctional) { //  false
-                var numArray = new Array();
-                for (var k = 0; k < requiredNumberOfItems; k++) {
-                    numArray.push(k);
-                }
-
-                numArray = _.map(numArray, ApproxyPi.getSeriesItem);
-                this.pi = _.reduce(numArray, function (sum, num) {
-                    return sum + num;
-                });
-
-            }
-            else
-            {
-                for(var k = this.startSeriesAt; k < requiredNumberOfItems; k++)
-                {
-                    this.pi += ApproxyPi.getSeriesItem(k);
-
-                    if(k%100 == 0) {
-                        this.emit('progress');
-                        this.startSeriesAt = k+1;
-                        var self = this;
-                        window.setTimeout(this.calc.bind(self), 0);
-                        return;
-                    }
-                }
-                this.isInProcess = false;
-            }
-
-            this.precision = precision;
+        if(precision <= this.precision) {
+            //console.log(precision + ' <= ' + this.precision);
+            this.emit('done');
+            return;
         }
-        //console.log('emitting done... pi = '+this.pi + ' prec = '+ this.precision);
-        this.emit('done');
+
+        this.precision = precision;
+        this.iterationsLeft = Math.ceil(Math.pow(10, precision)+1);
+        this.iterationsDone = 0;
+        this.pi = 0;
+
+        //this.isInProcess = true;
+        this.runLoop();
+
     }
-};
+}
 
 ApproxyPi.getSeriesItem = function getSeriesItem(n) {
     return 4 * Math.pow(-1, n) / (2*n+1);
